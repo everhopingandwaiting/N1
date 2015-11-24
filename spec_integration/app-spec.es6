@@ -1,17 +1,10 @@
 import {N1Launcher} from './integration-helper'
 
-describe('Nylas Bootup Tests', function() {
+describe('Nylas Prod Bootup Tests', function() {
   beforeAll((done)=>{
-    // Boot in prod mode with no arguments
+    // Boot in dev mode with no arguments
     this.app = new N1Launcher([]);
-    this.app.start().then(()=>{
-      N1Launcher.waitUntilMainWindowLoaded(this.app.client)
-      .then((mainWindowId)=>{
-        this.app.client.window(mainWindowId).then(done)
-      }).finally(()=>{
-        done()
-      })
-    });
+    this.app.ready().finally(done);
   });
 
   afterAll((done)=> {

@@ -10,6 +10,15 @@ class N1Launcher extends Application {
     })
   }
 
+  ready() {
+    // Wrap in a Bluebird promise so we have `.finally on the return`
+    return Promise.resolve(this.start().then(()=>{
+      return N1Launcher.waitUntilMainWindowLoaded(this.client).then((mainWindowId)=>{
+        return this.client.window(mainWindowId)
+      })
+    }));
+  }
+
   static defaultNylasArgs() {
     return ["--enable-logging", `--resource-path=${jasmine.NYLAS_ROOT_PATH}`]
   }
