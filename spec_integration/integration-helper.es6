@@ -39,17 +39,13 @@ class N1Launcher extends Application {
   // Returns a promise that resolves with the main window's ID once it's
   // loaded.
   static waitUntilMainWindowLoaded(client, lastCheck=0) {
-    console.log("Checking for main window loaded");
     var CHECK_EVERY = 1000
     return new Promise((resolve, reject) => {
       client.windowHandles().then(({value}) => {
-        console.log("Found windows:");
-        console.log(value);
         return Promise.mapSeries(value, (windowId)=>{
           return N1Launcher.switchAndCheckForMain(client, windowId)
         })
       }).then((mainChecks)=>{
-        console.log(mainChecks);
         for (mainWindowId of mainChecks) {
           if (mainWindowId) {return resolve(mainWindowId)}
         }
@@ -60,17 +56,14 @@ class N1Launcher extends Application {
           N1Launcher.waitUntilMainWindowLoaded(client, now).then(resolve)
         }, delay)
       }).catch((err) => {
-        console.log("Catching rejection");
-        console.log(err);
+        console.error(err);
       });
     });
   }
 
   // Returns false or the window ID of the main window
   static switchAndCheckForMain(client, windowId) {
-    console.log(`Switching to ${windowId}`);
     return client.window(windowId).then(()=>{
-      console.log(`Checking for nylas-workspace in ${windowId}`);
       return client.isExisting(".main-window-loaded").then((exists)=>{
         if (exists) {return windowId} else {return false}
       })
