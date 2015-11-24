@@ -24,7 +24,6 @@ class NylasWindow
      toolbar,
      resizable,
      pathToOpen,
-     showSpecsInWindow,
      @isSpec,
      @devMode,
      @safeMode,

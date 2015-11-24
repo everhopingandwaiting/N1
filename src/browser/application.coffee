@@ -98,10 +98,9 @@ class Application
     @launchWithOptions(options)
 
   # Opens a new window based on the options provided.
-  launchWithOptions: ({urlsToOpen, test, devMode, safeMode, specDirectory, specFilePattern, logFile, showSpecsInWindow}) ->
+  launchWithOptions: ({urlsToOpen, test, devMode, safeMode, specDirectory, specFilePattern, logFile, specsOnCommandLine}) ->
     if test
-      exitWhenDone = true
-      @runSpecs({exitWhenDone, showSpecsInWindow, @resourcePath, specDirectory, specFilePattern, logFile})
+      @runSpecs({exitWhenDone: specsOnCommandLine, @resourcePath, specDirectory, specFilePattern, logFile})
     else
       @openWindowsForTokenState()
       for urlToOpen in (urlsToOpen || [])
@@ -215,7 +214,6 @@ class Application
     @on 'application:run-all-specs', ->
       @runSpecs
         exitWhenDone: false
-        showSpecsInWindow: true
         resourcePath: @resourcePath
         safeMode: @windowManager.focusedWindow()?.safeMode
 
@@ -228,7 +226,6 @@ class Application
         return if not filenames or filenames.length is 0
         @runSpecs
           exitWhenDone: false
-          showSpecsInWindow: true
           resourcePath: @resourcePath
           specDirectory: filenames[0]
 
@@ -472,15 +469,12 @@ class Application
   #
   # options -
   #   :exitWhenDone - A Boolean that, if true, will close the window upon
-  #                   completion and exit the app with the status code of
-  #                   1 if the specs failed and 0 if they passed.
-  #   :showSpecsInWindow - A Boolean that, if true, will run specs in a
-  #                        window
+  #                   completion.
   #   :resourcePath - The path to include specs from.
   #   :specPath - The directory to load specs from.
   #   :safeMode - A Boolean that, if true, won't run specs from ~/.nylas/packages
   #               and ~/.nylas/dev/packages, defaults to false.
-  runSpecs: ({exitWhenDone, showSpecsInWindow, resourcePath, specDirectory, specFilePattern, logFile, safeMode}) ->
+  runSpecs: ({exitWhenDone, resourcePath, specDirectory, specFilePattern, logFile, safeMode}) ->
     if resourcePath isnt @resourcePath and not fs.existsSync(resourcePath)
       resourcePath = @resourcePath
 

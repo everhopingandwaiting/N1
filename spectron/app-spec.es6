@@ -1,17 +1,53 @@
 import {Application} from 'spectron';
 
-describe('Nylas', ()=> {
+describe('Nylas Unit Tests', ()=> {
   beforeAll((done)=>{
     this.app = new Application({
       path: jasmine.ELECTRON_LAUNCHER,
       args: jasmine.ELECTRON_ARGS.concat(jasmine.NYLAS_ARGS)
     });
-    this.app.start().then(()=> setTimeout(done, jasmine.BOOT_WAIT));
+    this.app.start().then(()=> {
+      client = this.app.client
+      client.waitForExist(".spec-reporter", jasmine.BOOT_WAIT).then(=> {
+        done()
+      })
+    });
+  });
+
+  it("doesn't work", (done)=> {
+    expect(true).toBe(false)
+    done();
   });
 
   afterEach((done)=> {
     if (this.app && this.app.isRunning()) {
       this.app.stop().then(done);
+    } else {
+      done()
+    }
+  });
+
+});
+
+describe('Nylas Bootup Tests', function() {
+  beforeEach((done)=>{
+    this.app = new Application({
+      path: jasmine.ELECTRON_LAUNCHER,
+      args: jasmine.ELECTRON_ARGS.concat(jasmine.NYLAS_ARGS)
+    });
+    this.app.start().then(()=> {
+      client = this.app.client
+      client.waitForExist(".spec-reporter", jasmine.BOOT_WAIT).then(=> {
+        done()
+      })
+    });
+  });
+
+  afterEach((done)=> {
+    if (this.app && this.app.isRunning()) {
+      this.app.stop().then(done);
+    } else {
+      done()
     }
   });
 
@@ -21,5 +57,9 @@ describe('Nylas', ()=> {
       done();
     });
   });
+});
+
+describe('Nylas Integration Tests', function() {
+
 });
 

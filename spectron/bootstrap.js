@@ -15,4 +15,4 @@ jasmine.ELECTRON_ARGS = process.argv[4].split("ELECTRON_ARGS=")[1].split(',')
 jasmine.NYLAS_ARGS = process.argv[5].split("NYLAS_ARGS=")[1].split(',')
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000000;
-jasmine.BOOT_WAIT = 1500000;
+jasmine.BOOT_WAIT = 30000;
