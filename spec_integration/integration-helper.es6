@@ -29,6 +29,15 @@ class N1Launcher extends Application {
     }
   }
 
+  // We unfortunatley can't just Spectron's `waitUntilWindowLoaded` because
+  // the first window that loads isn't necessarily the main render window (it
+  // could be the work window or others), and once the window is "loaded"
+  // it'll take a while for packages to load, etc. As such we periodically
+  // poll the list of windows to find one that looks like the main loaded
+  // window.
+  //
+  // Returns a promise that resolves with the main window's ID once it's
+  // loaded.
   static waitUntilMainWindowLoaded(client, lastCheck=0) {
     console.log("Checking for main window loaded");
     var CHECK_EVERY = 1000
@@ -41,8 +50,8 @@ class N1Launcher extends Application {
         })
       }).then((mainChecks)=>{
         console.log(mainChecks);
-        for (isMain of mainChecks) {
-          if (isMain) {return resolve()}
+        for (mainWindowId of mainChecks) {
+          if (mainWindowId) {return resolve(mainWindowId)}
         }
 
         var now = Date.now();
@@ -57,11 +66,14 @@ class N1Launcher extends Application {
     });
   }
 
+  // Returns false or the window ID of the main window
   static switchAndCheckForMain(client, windowId) {
     console.log(`Switching to ${windowId}`);
     return client.window(windowId).then(()=>{
       console.log(`Checking for nylas-workspace in ${windowId}`);
-      return client.isExisting(".main-window-loaded")
+      return client.isExisting(".main-window-loaded").then((exists)=>{
+        if (exists) {return windowId} else {return false}
+      })
     })
   }
 }
