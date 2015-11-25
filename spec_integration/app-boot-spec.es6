@@ -4,7 +4,7 @@ describe('Nylas Prod Bootup Tests', function() {
   beforeAll((done)=>{
     // Boot in dev mode with no arguments
     this.app = new N1Launcher([]);
-    this.app.ready().finally(done);
+    this.app.mainWindowReady().finally(done);
   });
 
   afterAll((done)=> {

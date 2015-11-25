@@ -10,7 +10,7 @@ class N1Launcher extends Application {
     })
   }
 
-  ready() {
+  mainWindowReady() {
     // Wrap in a Bluebird promise so we have `.finally on the return`
     return Promise.resolve(this.start().then(()=>{
       return N1Launcher.waitUntilMainWindowLoaded(this.client).then((mainWindowId)=>{
