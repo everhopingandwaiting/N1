@@ -92,6 +92,8 @@ class N1SpecReporter extends View
     else
       @message.text "#{@failedCount} failures"
 
+    @status.addClass("specs-complete")
+
   reportSuiteResults: (suite) ->
 
   reportSpecResults: (spec) ->
