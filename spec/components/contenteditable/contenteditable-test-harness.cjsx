@@ -67,7 +67,7 @@ class ContenteditableTestHarness
       #   TimeOverride.enableSpies()
       #   resolve()
       # , 100000
-    , 200
+    , 500
 
   expectHTML: (expectedHTML) ->
     expect(@wrap.state.value).toBe expectedHTML

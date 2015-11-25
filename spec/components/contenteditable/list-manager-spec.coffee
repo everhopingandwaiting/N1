@@ -2,7 +2,7 @@ ContenteditableTestHarness = require './contenteditable-test-harness'
 
 return unless NylasEnv.inIntegrationSpecMode()
 
-xdescribe "ListManager", ->
+fdescribe "ListManager", ->
   beforeEach ->
     # console.log "--> Before each"
     @ce = new ContenteditableTestHarness
@@ -16,95 +16,99 @@ xdescribe "ListManager", ->
     @ce.cleanup()
 
   it "Creates ordered lists", -> waitsForPromise =>
-    @ce.keys(['1', '.', ' ']).then =>
+    @ce.keys(['1', '.', 'Space']).then =>
       # console.log "Keys typed"
       @ce.expectHTML "<ol><li></li></ol>"
       @ce.expectSelection (dom) ->
         node: dom.querySelectorAll("li")[0]
 
-  it "Undoes ordered list creation with backspace", ->
-    @ce.keys ['1', '.', ' ', 'backspace']
-    @ce.expectHTML "1.&nbsp;"
-    @ce.expectSelection (dom) ->
-      node: dom.childNodes[0]
-      offset: 3
+  xit "Undoes ordered list creation with backspace", -> waitsForPromise =>
+    @ce.keys(['1', '.', 'Space', 'Back space']).then =>
+      @ce.expectHTML "1.&nbsp;"
+      @ce.expectSelection (dom) ->
+        node: dom.childNodes[0]
+        offset: 3
 
-  it "Creates unordered lists with star", ->
-    @ce.keys ['*', ' ']
-    @ce.expectHTML "<ul><li></li></ul>"
-    @ce.expectSelection (dom) ->
-      node: dom.querySelectorAll("li")[0]
+  it "Creates unordered lists with star", -> waitsForPromise =>
+    @ce.keys(['*', 'Space']).then =>
+      @ce.expectHTML "<ul><li></li></ul>"
+      @ce.expectSelection (dom) ->
+        node: dom.querySelectorAll("li")[0]
+
+  xit "Undoes unordered list creation with backspace", ->
+    aitsForPromise =>
+      @ce.keys(['*', 'Space', 'Back space']).then =>
+        @ce.expectHTML "*&nbsp;"
+        @ce.expectSelection (dom) ->
+          node: dom.childNodes[0]
+          offset: 2
+
+  it "Creates unordered lists with dash", -> waitsForPromise =>
+    @ce.keys(['-', 'Space']).then =>
+      @ce.expectHTML "<ul><li></li></ul>"
+      @ce.expectSelection (dom) ->
+        node: dom.querySelectorAll("li")[0]
 
   it "Undoes unordered list creation with backspace", ->
-    @ce.keys ['*', ' ', 'backspace']
-    @ce.expectHTML "*&nbsp;"
-    @ce.expectSelection (dom) ->
-      node: dom.childNodes[0]
-      offset: 2
+    waitsForPromise =>
+      @ce.keys(['-', 'Space', 'Back space']).then =>
+        @ce.expectHTML "-&nbsp;"
+        @ce.expectSelection (dom) ->
+          node: dom.childNodes[0]
+          offset: 2
 
-  it "Creates unordered lists with dash", ->
-    @ce.keys ['-', ' ']
-    @ce.expectHTML "<ul><li></li></ul>"
-    @ce.expectSelection (dom) ->
-      node: dom.querySelectorAll("li")[0]
-
-  it "Undoes unordered list creation with backspace", ->
-    @ce.keys ['-', ' ', 'backspace']
-    @ce.expectHTML "-&nbsp;"
-    @ce.expectSelection (dom) ->
-      node: dom.childNodes[0]
-      offset: 2
-
-  it "create a single item then delete it with backspace", ->
-    @ce.keys ['-', ' ', 'a', 'left', 'backspace']
-    @ce.expectHTML "a"
-    @ce.expectSelection (dom) ->
-      node: dom.childNodes[0]
-      offset: 0
+  it "create a single item then delete it with backspace", -> 
+    waitsForPromise =>
+      @ce.keys(['-', 'Space', 'a', 'Left arrow', 'Back space']).then =>
+        @ce.expectHTML "a"
+        @ce.expectSelection (dom) ->
+          node: dom.childNodes[0]
+          offset: 0
 
   it "create a single item then delete it with tab", ->
-    @ce.keys ['-', ' ', 'a', 'shift-tab']
-    @ce.expectHTML "a"
-    @ce.expectSelection (dom) -> dom.childNodes[0]
-      node: dom.childNodes[0]
-      offset: 1
+    waitsForPromise =>
+      @ce.keys(['-', 'Space', 'a', 'Shift', 'Tab']).then =>
+        @ce.expectHTML "a"
+        @ce.expectSelection (dom) -> dom.childNodes[0]
+          node: dom.childNodes[0]
+          offset: 1
 
   describe "when creating two items in a list", ->
     beforeEach ->
-      @twoItemKeys = ['-', ' ', 'a', 'enter', 'b']
+      @twoItemKeys = ['-', 'Space', 'a', 'Return', 'b']
 
-    it "creates two items with enter at end", ->
-      @ce.keys @twoItemKeys
-      @ce.expectHTML "<ul><li>a</li><li>b</li></ul>"
-      @ce.expectSelection (dom) ->
-        node: dom.querySelectorAll('li')[1].childNodes[0]
-        offset: 1
+    it "creates two items with enter at end", -> waitsForPromise =>
+      @ce.keys(@twoItemKeys).then =>
+        @ce.expectHTML "<ul><li>a</li><li>b</li></ul>"
+        @ce.expectSelection (dom) ->
+          node: dom.querySelectorAll('li')[1].childNodes[0]
+          offset: 1
 
-    it "backspace from the start of the 1st item outdents", ->
+    xit "backspace from the start of the 1st item outdents", ->
       @ce.keys @twoItemKeys.concat ['left', 'up', 'backspace']
 
-    it "backspace from the start of the 2nd item outdents", ->
+    xit "backspace from the start of the 2nd item outdents", ->
       @ce.keys @twoItemKeys.concat ['left', 'backspace']
 
-    it "shift-tab from the start of the 1st item outdents", ->
+    xit "shift-tab from the start of the 1st item outdents", ->
       @ce.keys @twoItemKeys.concat ['left', 'up', 'shift-tab']
 
-    it "shift-tab from the start of the 2nd item outdents", ->
+    xit "shift-tab from the start of the 2nd item outdents", ->
       @ce.keys @twoItemKeys.concat ['left', 'shift-tab']
 
-    it "shift-tab from the end of the 1st item outdents", ->
+    xit "shift-tab from the end of the 1st item outdents", ->
       @ce.keys @twoItemKeys.concat ['up', 'shift-tab']
 
-    it "shift-tab from the end of the 2nd item outdents", ->
+    xit "shift-tab from the end of the 2nd item outdents", ->
       @ce.keys @twoItemKeys.concat ['shift-tab']
 
-    it "backspace from the end of the 1st item doesn't outdent", ->
+    xit "backspace from the end of the 1st item doesn't outdent", ->
       @ce.keys @twoItemKeys.concat ['up', 'backspace']
 
-    it "backspace from the end of the 2nd item doesn't outdent", ->
+    xit "backspace from the end of the 2nd item doesn't outdent", ->
       @ce.keys @twoItemKeys.concat ['backspace']
 
-  describe "multi-depth bullets", ->
+  xdescribe "multi-depth bullets", ->
     it "creates multi level bullet when tabbed in", ->
       @ce.keys ['-', ' ', 'a', 'tab']
 

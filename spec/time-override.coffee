@@ -33,6 +33,7 @@ class TimeOverride
   @enableSpies = =>
     window.advanceClock = @advanceClock
 
+    window.originalSetInterval = window.setInterval
     spyOn(window, "setTimeout").andCallFake @_fakeSetTimeout
     spyOn(window, "clearTimeout").andCallFake @_fakeClearTimeout
     spyOn(window, "setInterval").andCallFake @_fakeSetInterval

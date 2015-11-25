@@ -8,6 +8,7 @@ class ListManager extends ContenteditablePlugin
       @createList(event, selection)
 
   @onKeyDown: (event, editableNode, selection) ->
+    console.log(event.key)
     @_spaceEntered = event.key is " "
     if DOMUtils.isInList()
       if event.key is "Backspace" and DOMUtils.atStartOfList()
