@@ -4,7 +4,6 @@ fs = require 'fs-plus'
 path = require 'path'
 
 require '../src/window'
-NylasEnv.initialize()
 NylasEnv.restoreWindowDimensions()
 
 require 'jasmine-json'

@@ -223,16 +223,18 @@ class NylasEnvConstructor extends Model
     window.onbeforeunload = => @_unloading()
     @_unloadCallbacks = []
 
-    @setupSpectron() if @inSpecMode()
-
-  # When the test runner calls Spectron.Application::start, Electron
-  # ChromeDriver will boot up an instance of the app with the appropriate
-  # flags. ChromeDriver will setup a Selenium server that hooks into the
-  # booted process and exposes the Selenium Chrome API.
+  # Some unit tests require access to the Selenium web driver APIs as exposed
+  # by Spectron/Chromedriver. The app must be booted by Spectron as is done in the `run-integration-tests` task. Once Spectron boots the app, it will expose a RESTful API
   #
-  # `Spectron.Application::start` also creates a `WebDriver` client via the
-  # `webdriverio` library that connects to the Selenium server and wraps the
-  # RESTful Selenium localhost API with a nicer Node API.
+  # The Selenium API spec is here: https://code.google.com/p/selenium/wiki/JsonWireProtocol
+  #
+  # The Node wrapper for that API is provided by webdriver: http://webdriver.io/api.html
+  #
+  # Spectron wraps webdriver (in its `client` property) and adds additional methods: https://github.com/kevinsawicki/spectron
+  #
+  # Spectron requests that Selenium use Chromedriver
+  # https://sites.google.com/a/chromium.org/chromedriver/home to interface
+  # with the app, but points the binary at Electron.
   #
   # Since this code here is "inside" the booted process, we have no way of
   # directly accessing the client from the test runner. However, we can still
@@ -263,6 +265,9 @@ class NylasEnvConstructor extends Model
       @spectron.client.sessionID = sessionId
       @spectron.client.capabilities = capabilities
       @spectron.client.desiredCapabilities = capabilities
+
+  inIntegrationSpecMode: ->
+    @inSpecMode() and @spectron?.client?.sessionID
 
   # Start our error reporting to the backend and attach error handlers
   # to the window and the Bluebird Promise library, converting things

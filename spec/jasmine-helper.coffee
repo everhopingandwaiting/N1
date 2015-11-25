@@ -38,16 +38,18 @@ module.exports.runSpecSuite = (specSuite, logFile, logErrors=true) ->
     N1SpecReporter = require './n1-spec-reporter'
     reporter = new N1SpecReporter()
 
-  require specSuite
+  NylasEnv.initialize()
+  NylasEnv.setupSpectron().finally ->
+    require specSuite
 
-  jasmineEnv = jasmine.getEnv()
-  jasmineEnv.addReporter(reporter)
-  jasmineEnv.addReporter(timeReporter)
-  jasmineEnv.setIncludedTags([process.platform])
+    jasmineEnv = jasmine.getEnv()
+    jasmineEnv.addReporter(reporter)
+    jasmineEnv.addReporter(timeReporter)
+    jasmineEnv.setIncludedTags([process.platform])
 
-  $('body').append $$ -> @div id: 'jasmine-content'
+    $('body').append $$ -> @div id: 'jasmine-content'
 
-  jasmineEnv.execute()
+    jasmineEnv.execute()
 
 disableFocusMethods = ->
   ['fdescribe', 'ffdescribe', 'fffdescribe', 'fit', 'ffit', 'fffit'].forEach (methodName) ->

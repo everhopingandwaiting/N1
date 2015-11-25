@@ -1,6 +1,8 @@
 ContenteditableTestHarness = require './contenteditable-test-harness'
 
-xdescribe "ListManager", ->
+return unless NylasEnv.inIntegrationSpecMode()
+
+describe "ListManager", ->
   beforeEach ->
     # console.log "--> Before each"
     @ce = new ContenteditableTestHarness
