@@ -7,9 +7,12 @@ describe('Integrated Unit Tests', function() {
     // Boot in dev mode with no arguments
     this.app = new N1Launcher(["--test=window"]);
     this.app.start().then(done).catch(done)
+    this.originalTimeoutInterval = jasmine.DEFAULT_TIMEOUT_INTERVAL
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 5*60*1000 // 5 minutes
   });
 
   afterAll((done)=> {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeoutInterval
     if (this.app && this.app.isRunning()) {
       this.app.stop().then(done);
     } else {

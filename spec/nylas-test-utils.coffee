@@ -16,9 +16,7 @@ NylasTestUtils =
 
   keyDown: (key, target) ->
     event = KeymapManager.buildKeydownEvent(key, target: target)
-    # console.log event
-    # NylasEnv.keymaps.handleKeyboardEvent(event)
-    # target.dispatchEvent(event)
+    NylasEnv.keymaps.handleKeyboardEvent(event)
 
   # React's "renderIntoDocument" does not /actually/ attach the component
   # to the document. It's a sham: http://dragon.ak.fbcdn.net/hphotos-ak-xpf1/t39.3284-6/10956909_1423563877937976_838415501_n.js

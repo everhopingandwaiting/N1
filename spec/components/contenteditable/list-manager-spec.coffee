@@ -1,6 +1,6 @@
 ContenteditableTestHarness = require './contenteditable-test-harness'
 
-fdescribe "ListManager", ->
+xdescribe "ListManager", ->
   beforeEach ->
     # console.log "--> Before each"
     @ce = new ContenteditableTestHarness
@@ -13,7 +13,7 @@ fdescribe "ListManager", ->
     # console.log "<-- After each"
     @ce.cleanup()
 
-  ffit "Creates ordered lists", -> waitsForPromise =>
+  it "Creates ordered lists", -> waitsForPromise =>
     @ce.keys(['1', '.', ' ']).then =>
       # console.log "Keys typed"
       @ce.expectHTML "<ol><li></li></ol>"
