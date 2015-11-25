@@ -22,12 +22,13 @@ describe('Integrated Unit Tests', function() {
 
   it("Passes all integrated unit tests", (done)=> {
     var client = this.app.client
-    console.log("Waiting for specs-complete to appear")
     client.waitForExist(".specs-complete", jasmine.UNIT_TEST_TIMEOUT)
     .then(()=>{ return client.getHTML(".specs-complete .message") })
     .then((results)=>{
-      console.log("DONE")
       expect(results).toMatch(/0 failures/)
+    }).then(()=>{ return client.getHTML(".plain-text-output") })
+    .then((errorOutput)=>{
+      expect(errorOutput).toBe('<pre class="plain-text-output"></pre>')
       done()
     }).catch(done)
   });

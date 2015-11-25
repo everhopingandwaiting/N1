@@ -39,6 +39,12 @@ module.exports.runSpecSuite = (specSuite, logFile, logErrors=true) ->
     reporter = new N1SpecReporter()
 
   NylasEnv.initialize()
+
+  # Tests that run under an integration environment need Spectron to be
+  # asynchronously setup and connected to the Selenium API before proceeding.
+  # Once setup, one can test `NylasEnv.inIntegrationSpecMode()`
+  #
+  # This safely works regardless if Spectron is loaded.
   NylasEnv.setupSpectron().finally ->
     require specSuite
 
